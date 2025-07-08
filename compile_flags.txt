@@ -1,0 +1,7 @@
+-Wall
+-Wextra
+-g
+-pipe
+-pedantic
+-fstack-protector-all
+-Iinclude
