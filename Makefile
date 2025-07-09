@@ -9,14 +9,14 @@ TESTBUILDDIR=$(TESTDIR)/build
 OPT=-O2
 # Avoid in release flags -> -g -fsanitize=address
 # Avoid in development flags -> -O2
-CFLAGS=-std=c99 -Wall -Wextra -I$(INCDIR) -pipe -pedantic -O2 \
+CFLAGS=-std=c99 -Wall -Wextra -I$(INCDIR) -pipe -pedantic -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE $(OPT) \
 	   -fstack-protector-all -fPIE \
-	   -g -fsanitize=address
+	   -g
 LDFLAGS=-pie
 
 SRCS=$(wildcard $(SRCDIR)/*.c)
 OBJS=$(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
-EXEC=$(BUILDDIR)/main
+EXEC=$(BUILDDIR)/memalloc
 
 TESTSRCS=$(wildcard $(TESTDIR)/*.c)
 TESTOBJS=$(patsubst $(TESTDIR)/%.c, $(TESTOBJDIR)/%.o, $(TESTSRCS))
@@ -45,14 +45,11 @@ $(TESTOBJDIR)/%.o: $(TESTDIR)/%.c | $(TESTOBJDIR)
 $(BUILDDIR) $(OBJDIR) $(TESTBUILDDIR) $(TESTOBJDIR):
 	mkdir -p $@
 
-clean-obj:
-	rm -rf $(OBJDIR) $(TESTOBJDIR)
-
 clean-test:
 	rm -rf $(TESTBINS) $(TESTOBJDIR)
 
-clean: clean-obj clean-test
-	rm $(EXEC)
+clean: clean-test
+	rm -rf $(OBJDIR) $(EXEC)
 
 # only if passing arguments are needed
 # %:
