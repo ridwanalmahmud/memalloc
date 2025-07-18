@@ -60,14 +60,14 @@ static Block *head = NULL, *tail = NULL;
 // (sizeof(word_t) - 1) = 7 ->              0b00000111
 // ~(sizeof(word_t) - 1) = ~7 ->            0b11111000
 // bitwise &  (0b00010100 & 0b11111000) ->  0b00100000
-inline size_t align(size_t n);
+size_t align(size_t n);
 
 // reserves allocation size of memory block
 // total allocation = (block header) + (first data word) - (word_t data[1])
 // since the `word_t data[1]` already allocates one word inside the Block
 // structure, we decrease it from the size request: if a user allocates
 // only one word, it's fully in the Block struct.
-inline size_t alloc_size(size_t size);
+size_t alloc_size(size_t size);
 
 // request memory from os
 // the heap grows upwards and the end is denoted by brk pointer
@@ -82,6 +82,6 @@ word_t *memalloc(size_t size);
 
 // --- Helper functions ---
 // returns the object header
-inline Block *get_header(word_t *data);
+Block *get_header(word_t *data);
 
 #endif // ! __MEMALLOC_H__
